@@ -6,6 +6,16 @@ import _ from 'underscore';
 import { timeAgo } from './helpers';
 import { t } from 'meteor/rocketchat:utils';
 
+function customField(result, fieldName) {
+	if (result && result.customFields && result.customFields[fieldName]) {
+		return result.customFields[fieldName];
+	}
+}
+function userEmail(emails) {
+	if (emails && emails.length > 0) {
+		return emails[0].address;
+	}
+}
 function directorySearch(config, cb) {
 	return Meteor.call('browseChannels', config, (err, result) => {
 		cb(result && result.results && result.results.length && result.results.map((result) => {
@@ -13,8 +23,8 @@ function directorySearch(config, cb) {
 				return {
 					name: result.name,
 					users: result.usersCount || 0,
-					createdAt: timeAgo(result.ts, t),
-					lastMessage: result.lastMessage && timeAgo(result.lastMessage.ts, t),
+					createdAt: timeAgo(result.ts),
+					lastMessage: result.lastMessage && timeAgo(result.lastMessage.ts),
 					description: result.description,
 					archived: result.archived,
 					topic: result.topic,
@@ -26,6 +36,14 @@ function directorySearch(config, cb) {
 					name: result.name,
 					username: result.username,
 					createdAt: timeAgo(result.createdAt, t),
+					lastLogin: timeAgo(result.lastLogin),
+					email: userEmail(result.emails),
+					department: customField(result, 'Department'),
+					title: customField(result, 'Title'),
+					phone: customField(result, 'PhoneNumber'),
+					ext: customField(result, 'Extension'),
+					mobile: customField(result, 'Mobile'),
+					status: result.status === 'invisible' ? 'offline' : result.status,
 				};
 			}
 			return null;

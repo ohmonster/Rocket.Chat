@@ -90,8 +90,11 @@ Meteor.methods({
 				fields: {
 					username: 1,
 					name: 1,
+					lastLogin: 1,
 					createdAt: 1,
+					status: 1,
 					emails: 1,
+					customFields: 1,
 				},
 			}).fetch(),
 			total: RocketChat.models.Users.findByActiveUsersExcept(text, [user.username]).count(),
