@@ -11,6 +11,20 @@ function customField(result, fieldName) {
 		return result.customFields[fieldName];
 	}
 }
+
+function getDisplayPhoneNumber(result) {
+	// 6564 - 5195 - nitad - RocketChat - display mobile numbers in user directory
+	const mainTollFreeNumber = '8002058620';
+	const mainArkansasNumber = '5019550033';
+	const mobile = customField(result, 'Mobile') || '';
+	const userPhone = customField(result, 'PhoneNumber') || '';
+	const userPhoneIsMain = userPhone.match(/\d*/g).join('') === mainTollFreeNumber || userPhone.match(/\d*/g).join('') === mainArkansasNumber;
+	if (mobile.match(/\d*/g).length > 1 && userPhoneIsMain) {
+		return mobile;
+	} else {
+		return userPhone;
+	}
+}
 function userEmail(emails) {
 	if (emails && emails.length > 0) {
 		return emails[0].address;
@@ -40,7 +54,7 @@ function directorySearch(config, cb) {
 					email: userEmail(result.emails),
 					department: customField(result, 'Department'),
 					title: customField(result, 'Title'),
-					phone: customField(result, 'PhoneNumber'),
+					phone: getDisplayPhoneNumber(result),
 					ext: customField(result, 'Extension'),
 					mobile: customField(result, 'Mobile'),
 					status: result.status === 'invisible' ? 'offline' : result.status,
