@@ -18,7 +18,7 @@ function getDisplayPhoneNumber(result) {
 	const mainArkansasNumber = '5019550033';
 	const mobile = customField(result, 'Mobile') || '';
 	const userPhone = customField(result, 'PhoneNumber') || '';
-	const userPhoneIsMain = userPhone.match(/\d*/g).join('') === mainTollFreeNumber || userPhone.match(/\d*/g).join('') === mainArkansasNumber;
+	const userPhoneIsMain = userPhone.match(/\d*/g).join('') === mainTollFreeNumber || userPhone.match(/\d*/g).join('') === mainArkansasNumber || userPhone === '';
 	if (mobile.match(/\d*/g).length > 1 && userPhoneIsMain) {
 		return mobile;
 	} else {
